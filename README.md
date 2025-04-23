@@ -31,7 +31,19 @@ The project requires the following Python packages:
 ## Installation
 
 1. Clone this repository or download the script.
-2. Install the required dependencies using `pip`:
+2. Change dir to the repo and set up a python virtual environment:
+
+   ```bash
+   python -m venv .venv
+3. Activate the new virtual environment:
+
+   ```bash
+   .\.venv\Scripts\activate
+4. Install the required dependencies:
 
    ```bash
    pip install -r requirements.txt
+5. Run the script:
+
+   ```bash
+   python fetch.py
