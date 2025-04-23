@@ -91,7 +91,11 @@ def display_feed(name, feed, output_file):
                 # Remove the query string (UTM parameters) from the link
                 parsed_url = urlparse(entry.link)
                 cleaned_url = urlunparse(parsed_url._replace(query=""))
+                #pub_date = getattr(entry, 'pubDate', 'N/A')  # Use 'N/A' if pubDate is missing
+                description = getattr(entry, 'description', 'N/A')  # Use 'N/A' if description is missing
                 output_file.write(f"[{name}][{normalized_title}][{cleaned_url}]\n")
+                #print(f"{name}: {normalized_title}\n{pub_date}\n{description}\n{cleaned_url}\n")
+                print(f"{name}: {normalized_title}\n{description}\n{cleaned_url}\n")
         else:
             output_file.write(f"No recent entries for {name}.\n")
     else:
