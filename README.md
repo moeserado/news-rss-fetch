@@ -9,7 +9,8 @@ This project is a Python script that fetches and processes RSS feeds, filters en
 - Filters feed entries published within the last 24 hours.
 - Normalizes text in feed titles to handle encoding issues.
 - Cleans URLs by removing query strings (like UTM parameters).
-- Outputs the filtered feed entries to a file (`fetch.out`) and prints them to the console.
+- Outputs the filtered feed entries to a file (`fetch.out`) and 
+- Prints these entries to the console in markdown format.
 
 ## Configuration
 
