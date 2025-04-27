@@ -3,16 +3,15 @@ import feedparser
 from datetime import datetime, timedelta
 from urllib.parse import urlparse, urlunparse
 import unicodedata  # For text normalization
+from IPython.display import display
+from ftfy import fix_text
 
 def normalize_text(text):
     """
-    Normalizes text to fix encoding issues.
+    Normalizes text to fix encoding issues and ensure proper Unicode formatting.
     """
-    try:
-        # Decode from bytes and re-encode to UTF-8
-        return text.encode('latin1').decode('utf-8')
-    except (UnicodeEncodeError, UnicodeDecodeError):
-        pass  # If decoding fails, use the original text
+    # Use ftfy to fix encoding issues
+    text = fix_text(text)
 
     # Normalize Unicode to NFC (Canonical Composition)
     return unicodedata.normalize('NFC', text)
@@ -87,15 +86,18 @@ def display_feed(name, feed, output_file):
             for entry in filtered_entries:
                 # Normalize the title to fix encoding issues
                 normalized_title = normalize_text(entry.title)
-
                 # Remove the query string (UTM parameters) from the link
                 parsed_url = urlparse(entry.link)
                 cleaned_url = urlunparse(parsed_url._replace(query=""))
                 #pub_date = getattr(entry, 'pubDate', 'N/A')  # Use 'N/A' if pubDate is missing
                 description = getattr(entry, 'description', 'N/A')  # Use 'N/A' if description is missing
-                output_file.write(f"[{name}][{normalized_title}][{cleaned_url}]\n")
-                #print(f"{name}: {normalized_title}\n{pub_date}\n{description}\n{cleaned_url}\n")
-                print(f"{name}: {normalized_title}\n{description}\n{cleaned_url}\n")
+                #write to fetch.out
+                output_file.write(f"{normalized_title} | {cleaned_url}\n")
+                #write to STDOUT
+                #display(Markdown("[{normalized_title}]({cleaned_url})"))
+                #display(Markdown("_{description}_"))
+                print(f"[{normalized_title}]({cleaned_url})")
+                print(f"_{description}_\n")
         else:
             output_file.write(f"No recent entries for {name}.\n")
     else:
@@ -115,7 +117,7 @@ def main():
     with open(output_file_path, 'w', encoding='utf-8') as output_file: 
 
         for name, url in feeds.items():
-            print(f"\nFetching feed: {name} ({url})")
+            print(f"\n\nFetching feed: {name} ({url})\n")
             feed = fetch_feed_content(url)
             display_feed(name, feed, output_file)
 
